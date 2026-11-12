@@ -9,6 +9,7 @@ import java.awt.Desktop;
 import java.net.URI;
 
 @SpringBootApplication
+
 @MapperScan("com.example.test1.mapper")
 public class Test1Application {
 

@@ -1,0 +1,126 @@
++-----------------------------------------------------------------+
+| section                                                         |
++-----------------------------------------------------------------+
+| ===== 1. 数据表清单（引擎 / 字符集 / 注释） =====               |
++-----------------------------------------------------------------+
++-------------------+--------+--------------------+-----------------------------+------------+
+| TABLE_NAME        | ENGINE | TABLE_COLLATION    | TABLE_COMMENT               | TABLE_ROWS |
++-------------------+--------+--------------------+-----------------------------+------------+
+| department        | InnoDB | utf8mb4_unicode_ci | 科室                        |          6 |
+| doctor            | InnoDB | utf8mb4_unicode_ci | 医生                        |         10 |
+| drug              | InnoDB | utf8mb4_unicode_ci | 药品字典                    |         10 |
+| job_title         | InnoDB | utf8mb4_unicode_ci | 职称与挂号费字典            |          4 |
+| patient           | InnoDB | utf8mb4_unicode_ci | 患者                        |         10 |
+| prescription      | InnoDB | utf8mb4_unicode_ci | 电子处方（处方头）          |          6 |
+| prescription_item | InnoDB | utf8mb4_unicode_ci | 电子处方明细                |         11 |
+| registration      | InnoDB | utf8mb4_unicode_ci | 挂号记录                    |         12 |
++-------------------+--------+--------------------+-----------------------------+------------+
++-----------------------------------------------------+
+| section                                             |
++-----------------------------------------------------+
+| ===== 2. 主键、非空、唯一约束统计 =====             |
++-----------------------------------------------------+
++-------------------+----------+----------------+-------------------+
+| TABLE_NAME        | pk_count | not_null_count | single_col_unique |
++-------------------+----------+----------------+-------------------+
+| department        |        1 |              7 |                 2 |
+| doctor            |        1 |             11 |                 3 |
+| drug              |        1 |              6 |                 1 |
+| job_title         |        1 |              4 |                 2 |
+| patient           |        1 |              8 |                 3 |
+| prescription      |        1 |              7 |                 2 |
+| prescription_item |        1 |              7 |                 0 |
+| registration      |        1 |              9 |                 1 |
++-------------------+----------+----------------+-------------------+
++-----------------------------------+
+| section                           |
++-----------------------------------+
+| ===== 3. 唯一索引明细 =====       |
++-----------------------------------+
++-------------------+------------------------------+--------------------------------+
+| TABLE_NAME        | INDEX_NAME                   | columns_in_index               |
++-------------------+------------------------------+--------------------------------+
+| department        | uk_department_code           | dept_code                      |
+| department        | uk_department_name           | dept_name                      |
+| doctor            | uk_doctor_idcard             | id_card                        |
+| doctor            | uk_doctor_no                 | doctor_no                      |
+| doctor            | uk_doctor_phone              | phone                          |
+| drug              | uk_drug_code                 | drug_code                      |
+| job_title         | uk_job_title_code            | title_code                     |
+| job_title         | uk_job_title_name            | title_name                     |
+| patient           | uk_patient_idcard            | id_card                        |
+| patient           | uk_patient_no                | patient_no                     |
+| patient           | uk_patient_phone             | phone                          |
+| prescription      | uk_prescription_no           | prescription_no                |
+| prescription      | uk_prescription_registration | registration_id                |
+| prescription_item | uk_item_prescription_drug    | prescription_id,drug_id        |
+| registration      | uk_doctor_visit_slot         | doctor_id,visit_date,time_slot |
+| registration      | uk_registration_no           | registration_no                |
++-------------------+------------------------------+--------------------------------+
++-----------------------------+
+| section                     |
++-----------------------------+
+| ===== 4. 外键明细 =====     |
++-----------------------------+
++-------------------+------------------------------+-----------------+-----------------------+------------------------+-------------+-------------+
+| TABLE_NAME        | CONSTRAINT_NAME              | COLUMN_NAME     | REFERENCED_TABLE_NAME | REFERENCED_COLUMN_NAME | DELETE_RULE | UPDATE_RULE |
++-------------------+------------------------------+-----------------+-----------------------+------------------------+-------------+-------------+
+| doctor            | fk_doctor_dept               | dept_id         | department            | dept_id                | RESTRICT    | CASCADE     |
+| doctor            | fk_doctor_title              | title_id        | job_title             | title_id               | RESTRICT    | CASCADE     |
+| prescription      | fk_prescription_registration | registration_id | registration          | registration_id        | RESTRICT    | CASCADE     |
+| prescription_item | fk_item_drug                 | drug_id         | drug                  | drug_id                | RESTRICT    | CASCADE     |
+| prescription_item | fk_item_prescription         | prescription_id | prescription          | prescription_id        | CASCADE     | CASCADE     |
+| registration      | fk_registration_doctor       | doctor_id       | doctor                | doctor_id              | RESTRICT    | CASCADE     |
+| registration      | fk_registration_patient      | patient_id      | patient               | patient_id             | RESTRICT    | CASCADE     |
++-------------------+------------------------------+-----------------+-----------------------+------------------------+-------------+-------------+
++-----------------------------------+
+| section                           |
++-----------------------------------+
+| ===== 5. CHECK 约束明细 =====     |
++-----------------------------------+
++-------------------+------------------------+--------------------------------------------------------------------------------+
+| TABLE_NAME        | CONSTRAINT_NAME        | CHECK_CLAUSE                                                                   |
++-------------------+------------------------+--------------------------------------------------------------------------------+
+| doctor            | ck_doctor_gender       | (`gender` in (_utf8mb4\'M\',_utf8mb4\'F\'))                                    |
+| doctor            | ck_doctor_idcard       | regexp_like(`id_card`,_utf8mb4\'^[0-9]{17}[0-9Xx]$\')                          |
+| doctor            | ck_doctor_phone        | regexp_like(`phone`,_utf8mb4\'^1[3-9][0-9]{9}$\')                              |
+| doctor            | ck_doctor_status       | (`status` in (0,1))                                                            |
+| drug              | ck_drug_price          | (`price` >= 0)                                                                 |
+| job_title         | ck_job_title_fee       | (`registration_fee` >= 0)                                                      |
+| patient           | ck_patient_gender      | (`gender` in (_utf8mb4\'M\',_utf8mb4\'F\'))                                    |
+| patient           | ck_patient_idcard      | regexp_like(`id_card`,_utf8mb4\'^[0-9]{17}[0-9Xx]$\')                          |
+| patient           | ck_patient_phone       | regexp_like(`phone`,_utf8mb4\'^1[3-9][0-9]{9}$\')                              |
+| prescription_item | ck_item_days           | (`days` > 0)                                                                   |
+| prescription_item | ck_item_quantity       | (`quantity` > 0)                                                               |
+| registration      | ck_registration_slot   | (`time_slot` in (_utf8mb4\'AM\',_utf8mb4\'PM\'))                               |
+| registration      | ck_registration_status | (`status` in (_utf8mb4\'BOOKED\',_utf8mb4\'COMPLETED\',_utf8mb4\'CANCELLED\')) |
++-------------------+------------------------+--------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------+
+| section                                                                                     |
++---------------------------------------------------------------------------------------------+
+| ===== 6. 3NF 关联还原：挂号信息不冗余存储，全部由外键 JOIN 得到 =====                       |
++---------------------------------------------------------------------------------------------+
++-----------------+------------+-----------+-----------+--------------+---------------+-------------+-----------+-----------------+------------------+
+| registration_no | visit_date | time_slot | status    | patient_name | patient_phone | doctor_name | dept_name | title_name      | registration_fee |
++-----------------+------------+-----------+-----------+--------------+---------------+-------------+-----------+-----------------+------------------+
+| R202611120001   | 2026-11-12 | AM        | COMPLETED | 何伟         | 13800000001   | 张建国      | 内科      | 主任医师        |            50.00 |
+| R202611120002   | 2026-11-12 | AM        | COMPLETED | 唐雨         | 13800000002   | 李慧敏      | 内科      | 副主任医师      |            30.00 |
+| R202611120003   | 2026-11-12 | AM        | COMPLETED | 罗俊         | 13800000003   | 王志强      | 外科      | 主任医师        |            50.00 |
+| R202611120004   | 2026-11-12 | AM        | COMPLETED | 宋佳         | 13800000004   | 刘雅琴      | 儿科      | 副主任医师      |            30.00 |
+| R202611120005   | 2026-11-12 | AM        | COMPLETED | 邓超         | 13800000005   | 吴丽华      | 妇产科    | 主任医师        |            50.00 |
++-----------------+------------+-----------+-----------+--------------+---------------+-------------+-----------+-----------------+------------------+
++---------------------------------------------------------------------+
+| section                                                             |
++---------------------------------------------------------------------+
+| ===== 7. 3NF 关联还原：处方头 + 明细 + 药品字典 =====               |
++---------------------------------------------------------------------+
++-----------------+--------------------------+--------------------------+---------------+--------+--------------+------+----------+-------+
+| prescription_no | diagnosis                | drug_name                | specification | dosage | frequency    | days | quantity | price |
++-----------------+--------------------------+--------------------------+---------------+--------+--------------+------+----------+-------+
+| P202611120001   | 急性上呼吸道感染         | 阿莫西林胶囊             | 0.25g×24 粒   | 1 粒   | 每日三次     |    7 |       21 | 18.50 |
+| P202611120001   | 急性上呼吸道感染         | 氨溴索口服溶液           | 100ml         | 10ml   | 每日二次     |    5 |        1 | 24.00 |
+| P202611120002   | 胃食管反流病             | 奥美拉唑肠溶胶囊         | 20mg×14 粒    | 1 粒   | 每日一次     |   14 |       14 | 29.90 |
+| P202611120002   | 胃食管反流病             | 蒙脱石散                 | 3g×10 袋      | 1 袋   | 每日三次     |    3 |        9 | 16.00 |
+| P202611120003   | 腹痛待查                 | 头孢克肟片               | 0.1g×12 片    | 1 片   | 每日二次     |    5 |       10 | 36.80 |
+| P202611120003   | 腹痛待查                 | 葡萄糖注射液             | 5% 250ml      | 250ml  | 每日一次     |    2 |        2 |  6.80 |
++-----------------+--------------------------+--------------------------+---------------+--------+--------------+------+----------+-------+
