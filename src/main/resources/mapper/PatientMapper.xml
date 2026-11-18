@@ -2,4 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.test1.mapper.PatientMapper">
 
+    <!-- 患者多条件组合查询：姓名模糊、手机号/身份证精确、性别精确 -->
+    <sql id="patientWhere">
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND phone = #{phone}
+            </if>
+            <if test="idCard != null and idCard != ''">
+                AND id_card = #{idCard}
+            </if>
+            <if test="gender != null and gender != ''">
+                AND gender = #{gender}
+            </if>
+        </where>
+    </sql>
+
+    <select id="countByCondition" resultType="long">
+        SELECT COUNT(*) FROM patient
+        <include refid="patientWhere"/>
+    </select>
+
+    <select id="selectByCondition" resultType="com.example.test1.entity.Patient">
+        SELECT patient_id, patient_no, name, gender, phone, id_card, address, created_at, updated_at
+        FROM patient
+        <include refid="patientWhere"/>
+        ORDER BY patient_id ASC
+        LIMIT #{offset}, #{size}
+    </select>
+
 </mapper>

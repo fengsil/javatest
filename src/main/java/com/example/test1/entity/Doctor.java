@@ -9,42 +9,76 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * <p>
- * 
- * </p>
- *
- * @author student
- * @since 
+ * 医生实体（doctor）
  */
 @TableName("doctor")
 public class Doctor implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 医生主键
+     */
     @TableId(value = "doctor_id", type = IdType.AUTO)
     private Long doctorId;
 
+    /**
+     * 医生工号
+     */
+    @TableField("doctor_no")
+    private String doctorNo;
+
+    /**
+     * 所属科室（外键 department.dept_id）
+     */
     @TableField("dept_id")
     private Long deptId;
 
+    /**
+     * 职称（外键 job_title.title_id），挂号费由职称决定
+     */
+    @TableField("title_id")
+    private Long titleId;
+
+    /**
+     * 姓名
+     */
     @TableField("name")
     private String name;
 
+    /**
+     * 性别：M 男 / F 女
+     */
     @TableField("gender")
     private String gender;
 
-    @TableField("title")
-    private String title;
-
+    /**
+     * 手机号（11 位）
+     */
     @TableField("phone")
     private String phone;
 
+    /**
+     * 身份证号（18 位）
+     */
     @TableField("id_card")
     private String idCard;
 
+    /**
+     * 状态：1 在诊 / 0 停诊
+     */
+    @TableField("status")
+    private Byte status;
+
+    /**
+     * 创建时间（数据库维护）
+     */
     @TableField("created_at")
     private LocalDateTime createdAt;
 
+    /**
+     * 更新时间（数据库维护）
+     */
     @TableField("updated_at")
     private LocalDateTime updatedAt;
 
@@ -56,12 +90,28 @@ public class Doctor implements Serializable {
         this.doctorId = doctorId;
     }
 
+    public String getDoctorNo() {
+        return doctorNo;
+    }
+
+    public void setDoctorNo(String doctorNo) {
+        this.doctorNo = doctorNo;
+    }
+
     public Long getDeptId() {
         return deptId;
     }
 
     public void setDeptId(Long deptId) {
         this.deptId = deptId;
+    }
+
+    public Long getTitleId() {
+        return titleId;
+    }
+
+    public void setTitleId(Long titleId) {
+        this.titleId = titleId;
     }
 
     public String getName() {
@@ -80,14 +130,6 @@ public class Doctor implements Serializable {
         this.gender = gender;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -102,6 +144,14 @@ public class Doctor implements Serializable {
 
     public void setIdCard(String idCard) {
         this.idCard = idCard;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -124,12 +174,14 @@ public class Doctor implements Serializable {
     public String toString() {
         return "Doctor{" +
             "doctorId = " + doctorId +
+            ", doctorNo = " + doctorNo +
             ", deptId = " + deptId +
+            ", titleId = " + titleId +
             ", name = " + name +
             ", gender = " + gender +
-            ", title = " + title +
             ", phone = " + phone +
             ", idCard = " + idCard +
+            ", status = " + status +
             ", createdAt = " + createdAt +
             ", updatedAt = " + updatedAt +
             "}";

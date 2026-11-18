@@ -1,12 +1,11 @@
 package com.example.test1.controller;
 
-import com.example.test1.common.BizException;
-import com.example.test1.common.FieldValidator;
 import com.example.test1.common.PageResult;
 import com.example.test1.common.R;
 import com.example.test1.entity.Department;
-import com.example.test1.mapper.DepartmentMapper;
+import com.example.test1.entity.JobTitle;
 import com.example.test1.service.IDepartmentService;
+import com.example.test1.service.IJobTitleService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,70 +18,61 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 科室管理接口：多条件分页查询、详情、新增、修改、删除。
+ */
 @RestController
 @RequestMapping("/api/departments")
 public class DepartmentController {
 
     private final IDepartmentService departmentService;
-    private final DepartmentMapper departmentMapper;
+    private final IJobTitleService jobTitleService;
 
-    public DepartmentController(IDepartmentService departmentService, DepartmentMapper departmentMapper) {
+    public DepartmentController(IDepartmentService departmentService, IJobTitleService jobTitleService) {
         this.departmentService = departmentService;
-        this.departmentMapper = departmentMapper;
+        this.jobTitleService = jobTitleService;
     }
 
     @GetMapping
     public R<PageResult<Department>> page(@RequestParam(defaultValue = "1") long page,
                                           @RequestParam(defaultValue = "10") long size,
                                           @RequestParam(required = false) String deptName,
-                                          @RequestParam(required = false) String deptLocation,
-                                          @RequestParam(required = false) String deptPhone) {
+                                          @RequestParam(required = false) String location,
+                                          @RequestParam(required = false) String tel) {
         PageParam p = PageParam.of(page, size);
-        long total = departmentMapper.countByCondition(trim(deptName), trim(deptLocation), trim(deptPhone));
-        List<Department> records = departmentMapper.selectByCondition(
-                trim(deptName), trim(deptLocation), trim(deptPhone), p.offset, p.size);
-        return R.ok(new PageResult<>(records, total, p.page, p.size));
+        return R.ok(departmentService.pageByCondition(p.page, p.size,
+                trim(deptName), trim(location), trim(tel)));
     }
 
     @GetMapping("/{id}")
     public R<Department> get(@PathVariable Long id) {
         Department entity = departmentService.getById(id);
         if (entity == null) {
-            throw new BizException("科室不存在");
+            throw new com.example.test1.common.BizException("科室不存在：" + id);
         }
         return R.ok(entity);
     }
 
     @PostMapping
     public R<Department> add(@RequestBody Department body) {
-        validate(body);
-        body.setDeptId(null);
-        departmentService.save(body);
-        return R.ok(body);
+        return R.ok(departmentService.create(body));
     }
 
     @PutMapping("/{id}")
     public R<Department> update(@PathVariable Long id, @RequestBody Department body) {
-        if (departmentService.getById(id) == null) {
-            throw new BizException("科室不存在");
-        }
-        validate(body);
-        body.setDeptId(id);
-        departmentService.updateById(body);
-        return R.ok(body);
+        return R.ok(departmentService.modify(id, body));
     }
 
     @DeleteMapping("/{id}")
     public R<Void> delete(@PathVariable Long id) {
-        if (!departmentService.removeById(id)) {
-            throw new BizException("科室不存在或删除失败");
-        }
+        departmentService.delete(id);
         return R.ok(null);
     }
 
-    private void validate(Department body) {
-        FieldValidator.notBlank(body.getDeptName(), "科室名称");
-        FieldValidator.optionalOfficePhone(body.getDeptPhone(), "科室电话");
+    /** 职称字典下拉数据（挂号费与职称绑定，供医生表单选择）。 */
+    @GetMapping("/titles")
+    public R<List<JobTitle>> titles() {
+        return R.ok(jobTitleService.list());
     }
 
     private static String trim(String value) {

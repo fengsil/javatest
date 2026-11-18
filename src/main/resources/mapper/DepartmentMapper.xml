@@ -2,4 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.test1.mapper.DepartmentMapper">
 
+    <!-- 科室查询公共条件片段：全部使用 #{} 预编译占位符，杜绝 SQL 注入 -->
+    <sql id="deptWhere">
+        <where>
+            <if test="deptName != null and deptName != ''">
+                AND dept_name LIKE CONCAT('%', #{deptName}, '%')
+            </if>
+            <if test="location != null and location != ''">
+                AND location LIKE CONCAT('%', #{location}, '%')
+            </if>
+            <if test="tel != null and tel != ''">
+                AND tel = #{tel}
+            </if>
+        </where>
+    </sql>
+
+    <select id="countByCondition" resultType="long">
+        SELECT COUNT(*) FROM department
+        <include refid="deptWhere"/>
+    </select>
+
+    <select id="selectByCondition" resultType="com.example.test1.entity.Department">
+        SELECT dept_id, dept_code, dept_name, location, tel, description, created_at, updated_at
+        FROM department
+        <include refid="deptWhere"/>
+        ORDER BY dept_id ASC
+        LIMIT #{offset}, #{size}
+    </select>
+
 </mapper>

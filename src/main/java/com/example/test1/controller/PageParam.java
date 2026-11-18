@@ -2,6 +2,9 @@ package com.example.test1.controller;
 
 import com.example.test1.common.BizException;
 
+/**
+ * 分页参数对象：统一校验页码与每页条数，并计算 LIMIT 偏移量。
+ */
 final class PageParam {
 
     final long page;

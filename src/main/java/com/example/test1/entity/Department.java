@@ -9,33 +9,58 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * <p>
- * 
- * </p>
- *
- * @author student
- * @since 
+ * 科室实体（department）
  */
 @TableName("department")
 public class Department implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 科室主键
+     */
     @TableId(value = "dept_id", type = IdType.AUTO)
     private Long deptId;
 
+    /**
+     * 科室编码，如 D001
+     */
+    @TableField("dept_code")
+    private String deptCode;
+
+    /**
+     * 科室名称
+     */
     @TableField("dept_name")
     private String deptName;
 
-    @TableField("dept_location")
-    private String deptLocation;
+    /**
+     * 门诊位置（楼栋-楼层-诊区）
+     */
+    @TableField("location")
+    private String location;
 
-    @TableField("dept_phone")
-    private String deptPhone;
+    /**
+     * 科室联系电话
+     */
+    @TableField("tel")
+    private String tel;
 
+    /**
+     * 科室简介
+     */
+    @TableField("description")
+    private String description;
+
+    /**
+     * 创建时间（数据库维护）
+     */
     @TableField("created_at")
     private LocalDateTime createdAt;
 
+    /**
+     * 更新时间（数据库维护）
+     */
     @TableField("updated_at")
     private LocalDateTime updatedAt;
 
@@ -47,6 +72,14 @@ public class Department implements Serializable {
         this.deptId = deptId;
     }
 
+    public String getDeptCode() {
+        return deptCode;
+    }
+
+    public void setDeptCode(String deptCode) {
+        this.deptCode = deptCode;
+    }
+
     public String getDeptName() {
         return deptName;
     }
@@ -55,20 +88,28 @@ public class Department implements Serializable {
         this.deptName = deptName;
     }
 
-    public String getDeptLocation() {
-        return deptLocation;
+    public String getLocation() {
+        return location;
     }
 
-    public void setDeptLocation(String deptLocation) {
-        this.deptLocation = deptLocation;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public String getDeptPhone() {
-        return deptPhone;
+    public String getTel() {
+        return tel;
     }
 
-    public void setDeptPhone(String deptPhone) {
-        this.deptPhone = deptPhone;
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -91,9 +132,11 @@ public class Department implements Serializable {
     public String toString() {
         return "Department{" +
             "deptId = " + deptId +
+            ", deptCode = " + deptCode +
             ", deptName = " + deptName +
-            ", deptLocation = " + deptLocation +
-            ", deptPhone = " + deptPhone +
+            ", location = " + location +
+            ", tel = " + tel +
+            ", description = " + description +
             ", createdAt = " + createdAt +
             ", updatedAt = " + updatedAt +
             "}";
