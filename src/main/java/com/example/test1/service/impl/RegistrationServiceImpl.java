@@ -6,6 +6,9 @@ import com.example.test1.mapper.RegistrationMapper;
 import com.example.test1.service.IRegistrationService;
 import org.springframework.stereotype.Service;
 
+/**
+ * 挂号记录业务实现。
+ */
 @Service
 public class RegistrationServiceImpl extends ServiceImpl<RegistrationMapper, Registration> implements IRegistrationService {
 }

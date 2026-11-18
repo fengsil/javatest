@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 医生业务实现：多条件分页、外键存在性与唯一性预检、字段规范化、引用检查后删除。
+ */
 @Service
 public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> implements IDoctorService {
 

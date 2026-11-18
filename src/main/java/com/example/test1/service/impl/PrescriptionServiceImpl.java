@@ -6,6 +6,9 @@ import com.example.test1.mapper.PrescriptionMapper;
 import com.example.test1.service.IPrescriptionService;
 import org.springframework.stereotype.Service;
 
+/**
+ * 电子处方业务实现。
+ */
 @Service
 public class PrescriptionServiceImpl extends ServiceImpl<PrescriptionMapper, Prescription> implements IPrescriptionService {
 }

@@ -2,6 +2,9 @@ package com.example.test1.common;
 
 import java.util.List;
 
+/**
+ * 统一分页返回结构：records 当前页数据、total 总记录数、page 当前页码、size 每页条数、pages 总页数。
+ */
 public class PageResult<T> {
 
     private List<T> records;

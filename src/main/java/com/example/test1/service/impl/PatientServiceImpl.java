@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * 患者业务实现：多条件分页、唯一性预检、字段规范化、引用检查后删除。
+ */
 @Service
 public class PatientServiceImpl extends ServiceImpl<PatientMapper, Patient> implements IPatientService {
 

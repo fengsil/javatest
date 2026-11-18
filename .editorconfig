@@ -1,0 +1,51 @@
+# EditorConfig：统一本项目的编码、缩进、换行符
+# https://editorconfig.org
+# IntelliJ IDEA / VS Code / Eclipse 均原生支持，无需额外插件。
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# Java 源码：4 空格缩进
+[*.java]
+indent_size = 4
+max_line_length = 120
+
+# XML 映射文件与配置：4 空格缩进
+[*.xml]
+indent_size = 4
+
+# 配置文件 / SQL / Markdown：2 或 4 空格按惯例
+[*.properties]
+indent_size = 4
+charset = utf-8
+
+[*.sql]
+indent_size = 4
+
+[*.md]
+trim_trailing_whitespace = false
+indent_size = 2
+
+[*.{yml,yaml,json}]
+indent_size = 2
+
+# 前端源码：2 空格缩进
+[frontend/**/*.{js,vue,css,html}]
+indent_size = 2
+
+# PowerShell 脚本：Windows 下需要 BOM 才能正确解析中文
+[*.ps1]
+charset = utf-8-bom
+end_of_line = crlf
+indent_size = 4
+
+# Windows 批处理：CRLF
+[*.{cmd,bat}]
+end_of_line = crlf

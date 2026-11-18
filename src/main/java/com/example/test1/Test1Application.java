@@ -8,14 +8,18 @@ import java.awt.Desktop;
 import java.net.URI;
 import java.util.Locale;
 
+/**
+ * 医疗系统启动类。
+ *
+ * <p>启动完成后按配置 {@code app.open-browser.enabled}（默认 true）自动打开首页，
+ * 便于验证环境搭建与 Mapper 连通性；可通过启动参数关闭。</p>
+ */
 @SpringBootApplication
-
 @MapperScan("com.example.test1.mapper")
 public class Test1Application {
 
     public static void main(String[] args) {
         var context = SpringApplication.run(Test1Application.class, args);
-
 
         // Open the hello world home page (/), never the /api endpoints
         try {
@@ -73,5 +77,4 @@ public class Test1Application {
             System.out.println("Unable to open browser automatically: " + e.getMessage());
         }
     }
-
 }

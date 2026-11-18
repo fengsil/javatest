@@ -6,6 +6,9 @@ import com.example.test1.mapper.JobTitleMapper;
 import com.example.test1.service.IJobTitleService;
 import org.springframework.stereotype.Service;
 
+/**
+ * 职称字典业务实现。
+ */
 @Service
 public class JobTitleServiceImpl extends ServiceImpl<JobTitleMapper, JobTitle> implements IJobTitleService {
 }

@@ -6,6 +6,9 @@ import com.example.test1.mapper.DrugMapper;
 import com.example.test1.service.IDrugService;
 import org.springframework.stereotype.Service;
 
+/**
+ * 药品字典业务实现。
+ */
 @Service
 public class DrugServiceImpl extends ServiceImpl<DrugMapper, Drug> implements IDrugService {
 }

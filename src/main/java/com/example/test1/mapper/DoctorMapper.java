@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 医生持久层：继承 BaseMapper 获得通用 CRUD，并补充多条件组合分页查询。SQL 见 resources/mapper/DoctorMapper.xml。
+ */
 public interface DoctorMapper extends BaseMapper<Doctor> {
 
     long countByCondition(@Param("name") String name,
