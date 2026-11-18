@@ -1,4 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.test1.mapper.PrescriptionMapper">
+
+    <!--
+      电子处方多条件组合查询：处方号模糊、挂号单精确、诊断模糊。
+      全部使用 #{} 预编译占位符，杜绝 SQL 注入；分页由分页插件自动处理，此处不写 LIMIT。
+    -->
+    <sql id="prescriptionWhere">
+        <where>
+            <if test="prescriptionNo != null and prescriptionNo != ''">
+                AND prescription_no LIKE CONCAT('%', #{prescriptionNo}, '%') ESCAPE '!'
+            </if>
+            <if test="registrationId != null">
+                AND registration_id = #{registrationId}
+            </if>
+            <if test="diagnosis != null and diagnosis != ''">
+                AND diagnosis LIKE CONCAT('%', #{diagnosis}, '%') ESCAPE '!'
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectPageByCondition" resultType="com.example.test1.entity.Prescription">
+        SELECT prescription_id, prescription_no, registration_id, diagnosis, advice,
+               issued_at, created_at, updated_at
+        FROM prescription
+        <include refid="prescriptionWhere"/>
+        ORDER BY prescription_id DESC
+    </select>
+
 </mapper>

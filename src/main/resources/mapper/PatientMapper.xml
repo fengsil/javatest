@@ -5,6 +5,7 @@
     <!--
       患者多条件组合查询：姓名模糊、手机号/身份证精确、性别精确。
       通配符已在 Service 层转义，ESCAPE '!' 保证 % 与 _ 按字面匹配。
+      分页由 MyBatis-Plus PaginationInnerInterceptor 自动处理，此处不写 LIMIT。
     -->
     <sql id="patientWhere">
         <where>
@@ -23,17 +24,11 @@
         </where>
     </sql>
 
-    <select id="countByCondition" resultType="long">
-        SELECT COUNT(*) FROM patient
-        <include refid="patientWhere"/>
-    </select>
-
-    <select id="selectByCondition" resultType="com.example.test1.entity.Patient">
+    <select id="selectPageByCondition" resultType="com.example.test1.entity.Patient">
         SELECT patient_id, patient_no, name, gender, phone, id_card, address, created_at, updated_at
         FROM patient
         <include refid="patientWhere"/>
         ORDER BY patient_id ASC
-        LIMIT #{offset}, #{size}
     </select>
 
 </mapper>

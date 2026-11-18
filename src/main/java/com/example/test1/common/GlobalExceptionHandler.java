@@ -1,5 +1,7 @@
 package com.example.test1.common;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -15,9 +17,14 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 /**
  * 全局异常处理：把业务异常、数据库约束冲突等统一转换为 R 结构，
  * 避免 SQL 细节与堆栈信息直接暴露给前端。
+ *
+ * <p>服务端仍会记录完整堆栈（见 {@code handleOther}），便于排查问题；
+ * 只有响应体对前端做了友好化处理。</p>
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BizException.class)
     public ResponseEntity<R<Void>> handleBiz(BizException e) {
@@ -62,6 +69,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<R<Void>> handleOther(Exception e) {
+        log.error("未处理的系统异常", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(R.fail(500, "服务器内部错误，请联系管理员"));
     }

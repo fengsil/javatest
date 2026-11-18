@@ -43,6 +43,15 @@
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
             <version>3.5.12</version>
         </dependency>
+        <!-- 分页插件依赖：PaginationInnerInterceptor 需要 jsqlparser 解析 SQL。
+             MyBatis-Plus 3.5.9 起把分页插件从核心包拆出，必须显式引入才能使用 IPage 分页。
+             版本必须与 starter 保持一致（3.5.12），否则 mybatis-plus-extension 会被降级，
+             运行期报 "CompatibleSet: SpringCompatibleSet not a subtype"。 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
+            <version>3.5.12</version>
+        </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>

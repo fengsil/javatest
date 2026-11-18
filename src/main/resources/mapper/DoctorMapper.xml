@@ -8,8 +8,7 @@
         phone / idCard 精确匹配（唯一键）  gender 性别   status 在诊状态
       所有参数均使用 #{}，由 JDBC PreparedStatement 预编译绑定，杜绝 SQL 注入；
       模糊查询通配符在 Service 层转义（SqlLikeUtil），此处声明 ESCAPE '!'。
-      注意：ESCAPE 字符选用 '!' 而不是 '\'，因为 MySQL 字符串字面量中反斜杠本身是转义符，
-      写成 ESCAPE '\' 会被解析成非法转义导致 SQL 语法错误。
+      分页由 MyBatis-Plus PaginationInnerInterceptor 自动处理，此处不写 LIMIT。
     -->
     <sql id="doctorWhere">
         <where>
@@ -37,18 +36,12 @@
         </where>
     </sql>
 
-    <select id="countByCondition" resultType="long">
-        SELECT COUNT(*) FROM doctor
-        <include refid="doctorWhere"/>
-    </select>
-
-    <select id="selectByCondition" resultType="com.example.test1.entity.Doctor">
+    <select id="selectPageByCondition" resultType="com.example.test1.entity.Doctor">
         SELECT doctor_id, doctor_no, dept_id, title_id, name, gender, phone, id_card,
                status, created_at, updated_at
         FROM doctor
         <include refid="doctorWhere"/>
         ORDER BY doctor_id ASC
-        LIMIT #{offset}, #{size}
     </select>
 
 </mapper>

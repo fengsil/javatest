@@ -3,8 +3,10 @@
 <mapper namespace="com.example.test1.mapper.DepartmentMapper">
 
     <!--
-      科室查询公共条件片段：全部使用 #{} 预编译占位符，杜绝 SQL 注入。
+      科室多条件分页查询。
+      全部使用 #{} 预编译占位符，杜绝 SQL 注入；
       模糊查询通配符已在 Service 层转义，ESCAPE 字符选用 '!'（反斜杠在 MySQL 字面量中本身是转义符）。
+      分页由 MyBatis-Plus PaginationInnerInterceptor 自动处理，此处不写 LIMIT。
     -->
     <sql id="deptWhere">
         <where>
@@ -20,17 +22,11 @@
         </where>
     </sql>
 
-    <select id="countByCondition" resultType="long">
-        SELECT COUNT(*) FROM department
-        <include refid="deptWhere"/>
-    </select>
-
-    <select id="selectByCondition" resultType="com.example.test1.entity.Department">
+    <select id="selectPageByCondition" resultType="com.example.test1.entity.Department">
         SELECT dept_id, dept_code, dept_name, location, tel, description, created_at, updated_at
         FROM department
         <include refid="deptWhere"/>
         ORDER BY dept_id ASC
-        LIMIT #{offset}, #{size}
     </select>
 
 </mapper>

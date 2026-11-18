@@ -1,4 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.test1.mapper.RegistrationMapper">
+
+    <!--
+      挂号记录多条件组合查询：单号模糊、患者/医生精确、就诊日期精确、时段与状态枚举。
+      全部使用 #{} 预编译占位符，杜绝 SQL 注入；分页由分页插件自动处理，此处不写 LIMIT。
+    -->
+    <sql id="registrationWhere">
+        <where>
+            <if test="registrationNo != null and registrationNo != ''">
+                AND registration_no LIKE CONCAT('%', #{registrationNo}, '%') ESCAPE '!'
+            </if>
+            <if test="patientId != null">
+                AND patient_id = #{patientId}
+            </if>
+            <if test="doctorId != null">
+                AND doctor_id = #{doctorId}
+            </if>
+            <if test="visitDate != null and visitDate != ''">
+                AND visit_date = #{visitDate}
+            </if>
+            <if test="timeSlot != null and timeSlot != ''">
+                AND time_slot = #{timeSlot}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectPageByCondition" resultType="com.example.test1.entity.Registration">
+        SELECT registration_id, registration_no, patient_id, doctor_id, visit_date,
+               time_slot, status, symptom, created_at, updated_at
+        FROM registration
+        <include refid="registrationWhere"/>
+        ORDER BY registration_id DESC
+    </select>
+
 </mapper>

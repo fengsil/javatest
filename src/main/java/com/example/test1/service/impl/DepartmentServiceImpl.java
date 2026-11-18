@@ -2,6 +2,8 @@ package com.example.test1.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.test1.common.BizException;
 import com.example.test1.common.FieldValidator;
@@ -44,17 +46,10 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         // 模糊条件转义 LIKE 通配符，防止用户输入 % _ 造成宽泛匹配
         deptName = SqlLikeUtil.escape(deptName);
         location = SqlLikeUtil.escape(location);
-        long total = baseMapper.countByCondition(deptName, location, tel);
-        if (total == 0) {
-            return new PageResult<>(Collections.emptyList(), 0, page, size);
-        }
-        long start = (page - 1) * size;
-        if (start >= total) {
-            // 页码越界时不查库，直接返回空列表
-            return new PageResult<>(Collections.emptyList(), total, page, size);
-        }
-        List<Department> records = baseMapper.selectByCondition(deptName, location, tel, start, size);
-        return new PageResult<>(records, total, page, size);
+        // 使用 MyBatis-Plus 分页插件：插件自动生成 COUNT 语句与 LIMIT 语句
+        Page<Department> pageParam = new Page<>(page, size);
+        IPage<Department> result = baseMapper.selectPageByCondition(pageParam, deptName, location, tel);
+        return new PageResult<>(result.getRecords(), result.getTotal(), page, size);
     }
 
     @Override

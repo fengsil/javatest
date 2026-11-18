@@ -1,6 +1,8 @@
 package com.example.test1.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.test1.common.BizException;
 import com.example.test1.common.FieldValidator;
@@ -50,17 +52,11 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
                                               String phone, String idCard, String gender, Integer status) {
         // 姓名是模糊查询，转义 LIKE 通配符；手机号/身份证是精确匹配，保持原值
         name = SqlLikeUtil.escape(name);
-        long total = baseMapper.countByCondition(name, deptId, titleId, phone, idCard, gender, status);
-        if (total == 0) {
-            return new PageResult<>(Collections.emptyList(), 0, page, size);
-        }
-        long start = (page - 1) * size;
-        if (start >= total) {
-            return new PageResult<>(Collections.emptyList(), total, page, size);
-        }
-        List<Doctor> records = baseMapper.selectByCondition(name, deptId, titleId, phone, idCard,
-                gender, status, start, size);
-        return new PageResult<>(records, total, page, size);
+        // 使用 MyBatis-Plus 分页插件：插件自动生成 COUNT 语句与 LIMIT 语句
+        Page<Doctor> pageParam = new Page<>(page, size);
+        IPage<Doctor> result = baseMapper.selectPageByCondition(
+                pageParam, name, deptId, titleId, phone, idCard, gender, status);
+        return new PageResult<>(result.getRecords(), result.getTotal(), page, size);
     }
 
     @Override
