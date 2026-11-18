@@ -2,11 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.test1.mapper.PatientMapper">
 
-    <!-- 患者多条件组合查询：姓名模糊、手机号/身份证精确、性别精确 -->
+    <!--
+      患者多条件组合查询：姓名模糊、手机号/身份证精确、性别精确。
+      通配符已在 Service 层转义，ESCAPE '!' 保证 % 与 _ 按字面匹配。
+    -->
     <sql id="patientWhere">
         <where>
             <if test="name != null and name != ''">
-                AND name LIKE CONCAT('%', #{name}, '%')
+                AND name LIKE CONCAT('%', #{name}, '%') ESCAPE '!'
             </if>
             <if test="phone != null and phone != ''">
                 AND phone = #{phone}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test1.mapper.StatusMapper">
+
+    <!-- 数据库连通性检查：用于 /api/status 健康检查接口 -->
+    <select id="checkConnection" resultType="java.lang.Integer">
+        SELECT 1
+    </select>
+
+    <select id="databaseName" resultType="java.lang.String">
+        SELECT DATABASE()
+    </select>
+
+</mapper>

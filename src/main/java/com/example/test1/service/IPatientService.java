@@ -6,6 +6,8 @@ import com.example.test1.entity.Patient;
 
 public interface IPatientService extends IService<Patient> {
 
+    /** 按主键查询，不存在时抛出业务异常（避免每个 Controller 重复判空）。 */
+    Patient getRequired(Long patientId);
     PageResult<Patient> pageByCondition(long page, long size, String name, String phone,
                                         String idCard, String gender);
 

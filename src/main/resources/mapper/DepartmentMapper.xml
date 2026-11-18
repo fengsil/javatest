@@ -2,14 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.test1.mapper.DepartmentMapper">
 
-    <!-- 科室查询公共条件片段：全部使用 #{} 预编译占位符，杜绝 SQL 注入 -->
+    <!--
+      科室查询公共条件片段：全部使用 #{} 预编译占位符，杜绝 SQL 注入。
+      模糊查询通配符已在 Service 层转义，ESCAPE 字符选用 '!'（反斜杠在 MySQL 字面量中本身是转义符）。
+    -->
     <sql id="deptWhere">
         <where>
             <if test="deptName != null and deptName != ''">
-                AND dept_name LIKE CONCAT('%', #{deptName}, '%')
+                AND dept_name LIKE CONCAT('%', #{deptName}, '%') ESCAPE '!'
             </if>
             <if test="location != null and location != ''">
-                AND location LIKE CONCAT('%', #{location}, '%')
+                AND location LIKE CONCAT('%', #{location}, '%') ESCAPE '!'
             </if>
             <if test="tel != null and tel != ''">
                 AND tel = #{tel}

@@ -44,11 +44,7 @@ public class DoctorController {
 
     @GetMapping("/{id}")
     public R<Doctor> get(@PathVariable Long id) {
-        Doctor entity = doctorService.getById(id);
-        if (entity == null) {
-            throw new com.example.test1.common.BizException("医生不存在：" + id);
-        }
-        return R.ok(entity);
+        return R.ok(doctorService.getRequired(id));
     }
 
     @PostMapping

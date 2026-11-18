@@ -46,11 +46,7 @@ public class DepartmentController {
 
     @GetMapping("/{id}")
     public R<Department> get(@PathVariable Long id) {
-        Department entity = departmentService.getById(id);
-        if (entity == null) {
-            throw new com.example.test1.common.BizException("科室不存在：" + id);
-        }
-        return R.ok(entity);
+        return R.ok(departmentService.getRequired(id));
     }
 
     @PostMapping

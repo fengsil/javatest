@@ -28,6 +28,9 @@
     </scm>
     <properties>
         <java.version>17</java.version>
+        <!-- 源码与资源统一 UTF-8，避免 Windows 下 javac 按 GBK 读取导致中文注释/提示乱码 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
     <dependencies>
         <dependency>
@@ -57,14 +60,10 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- 单元测试：已包含 JUnit 5、Mockito、AssertJ、Spring Test，无需再单独引入 JUnit 4 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

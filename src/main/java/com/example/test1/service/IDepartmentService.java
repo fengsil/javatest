@@ -6,6 +6,9 @@ import com.example.test1.entity.Department;
 
 public interface IDepartmentService extends IService<Department> {
 
+    /** 按主键查询，不存在时抛出业务异常（避免每个 Controller 重复判空）。 */
+    Department getRequired(Long deptId);
+
     /** 多条件组合分页查询。 */
     PageResult<Department> pageByCondition(long page, long size, String deptName, String location, String tel);
 
